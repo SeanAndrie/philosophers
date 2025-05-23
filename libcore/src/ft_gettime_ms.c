@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libcore.h                                          :+:      :+:    :+:   */
+/*   ft_gettime_ms.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/23 00:47:44 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/05/23 11:38:09 by sgadinga         ###   ########.fr       */
+/*   Created: 2025/05/23 11:31:59 by sgadinga          #+#    #+#             */
+/*   Updated: 2025/05/23 11:37:29 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBCORE_H
-# define LIBCORE_H
+#include "libcore.h"
 
-# include <limits.h>
-# include <unistd.h>
-# include <sys/time.h>
+long    ft_gettime_ms()
+{
+    struct timeval tv;
 
-int     ft_atoi(const char *s);
-
-long    ft_gettime_ms(void);
-long	ft_atol(const char *s);
-
-void    ft_putstr_fd(const char *s, int fd);
-
-#endif
+    if (!gettimeofday(&tv, NULL))
+        return (tv.tv_usec / 1000);
+    return (-1);
+}

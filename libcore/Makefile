@@ -6,7 +6,7 @@
 #    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/23 00:43:18 by sgadinga          #+#    #+#              #
-#    Updated: 2025/05/23 03:07:20 by sgadinga         ###   ########.fr        #
+#    Updated: 2025/05/23 11:35:31 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRC_DIR = src
 OBJ_DIR = obj
 
 SRCS = $(addprefix $(SRC_DIR)/,\
-		 ft_atol.c ft_atoi.c ft_putstr_fd.c)
+		 ft_atol.c ft_atoi.c ft_putstr_fd.c ft_gettime_ms.c)
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)

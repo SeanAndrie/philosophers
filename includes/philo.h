@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 20:23:17 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/05/23 03:06:28 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/05/23 11:55:24 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include <libcore.h>
 # include <pthread.h>
-# include <stdio.h> // FOR TESTING, REMOVE LATER
 # include <stdlib.h>
+# include <stdio.h>
 
 # ifndef EXEC_NAME
 # error "EXEC_NAME is not defined."
@@ -29,7 +29,13 @@
 typedef struct s_table
 {
 	pthread_mutex_t	*forks;
+	pthread_mutex_t stop_mutex;
+	pthread_mutex_t meal_mutex;
+	pthread_mutex_t print_mutex;
 	int				n_philos;
+	int				sim_stop;
+	int				total_meals;
+	long			start_time;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
@@ -39,9 +45,14 @@ typedef struct s_table
 typedef struct s_philo
 {
 	int				id;
+	pthread_t		thread;
 	struct s_table	*shared;
+	long			last_meal;
 }					t_philo;
 
 void	error(char *type, char *msg, char *error_code);
+
+// Table Initialization
+t_table	*init_table(char **av);
 
 #endif
