@@ -1,22 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_gettime_ms.c                                    :+:      :+:    :+:   */
+/*   core_putstr_fd.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/23 11:31:59 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/05/23 11:37:29 by sgadinga         ###   ########.fr       */
+/*   Created: 2025/07/24 14:06:43 by sgadinga          #+#    #+#             */
+/*   Updated: 2025/07/24 16:17:14 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libcore.h"
+#include <libcore.h>
 
-long    ft_gettime_ms()
+void	core_putstr_fd(const char *str, int fd)
 {
-    struct timeval tv;
-
-    if (!gettimeofday(&tv, NULL))
-        return (tv.tv_usec / 1000);
-    return (-1);
+	while (*str)
+		write(fd, str++, 1);
 }

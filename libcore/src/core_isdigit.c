@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   core_isdigit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 13:07:53 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/24 23:44:49 by sgadinga         ###   ########.fr       */
+/*   Created: 2025/07/24 14:27:27 by sgadinga          #+#    #+#             */
+/*   Updated: 2025/07/24 16:17:54 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <philo.h>
+#include <libcore.h>
 
-int main(int ac, char **av)
+int	core_isdigit(int c)
 {
-    if (ac >= 5 && ac <= 6)
-    {
-        core_putendl_fd("Valid Number of Arguments", STDOUT_FILENO);
-        printf("%d\n", is_valid_params(ac - 1, av + 1));
-    }
-    else
-        exit_on_error(NULL, "Invalid Number of Arguments", 1);
-    return (0);
+	return (c >= '0' && c <= '9');
 }

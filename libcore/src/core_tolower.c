@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   core_tolower.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/23 02:01:51 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/05/23 02:02:19 by sgadinga         ###   ########.fr       */
+/*   Created: 2025/07/24 16:45:34 by sgadinga          #+#    #+#             */
+/*   Updated: 2025/07/24 16:46:15 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libcore.h"
+#include <libcore.h>
 
-void    ft_putstr_fd(const char *s, int fd)
+int	core_tolower(int c)
 {
-    while (*s)
-        write(fd, s++, 1);
+	if (c >= 'A' && c <= 'Z')
+		return (c += 32);
+	return (c);
 }

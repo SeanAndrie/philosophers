@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   exit_on_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 13:07:53 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/24 23:44:49 by sgadinga         ###   ########.fr       */
+/*   Created: 2025/07/24 15:01:32 by sgadinga          #+#    #+#             */
+/*   Updated: 2025/07/24 16:18:45 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <philo.h>
+#include <libcore.h>
 
-int main(int ac, char **av)
+void	exit_on_error(const char *context, const char *message, int exit_code)
 {
-    if (ac >= 5 && ac <= 6)
-    {
-        core_putendl_fd("Valid Number of Arguments", STDOUT_FILENO);
-        printf("%d\n", is_valid_params(ac - 1, av + 1));
-    }
-    else
-        exit_on_error(NULL, "Invalid Number of Arguments", 1);
-    return (0);
+	core_putstr_fd("philo: ", STDERR_FILENO);
+	if (context)
+	{
+		core_putstr_fd(context, STDERR_FILENO);
+		core_putstr_fd(message, STDERR_FILENO);
+	}
+	core_putendl_fd(message, STDERR_FILENO);
+	if (exit_code >= 0)
+		exit(exit_code);
 }

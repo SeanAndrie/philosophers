@@ -3,39 +3,43 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
+#    By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/05/23 00:43:18 by sgadinga          #+#    #+#              #
-#    Updated: 2025/05/23 11:35:31 by sgadinga         ###   ########.fr        #
+#    Created: 2025/07/24 22:34:49 by sgadinga          #+#    #+#              #
+#    Updated: 2025/07/24 23:14:57 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libcore.a
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -Iincludes
+ARCHIVE = ar rcs
 
-SRC_DIR = src
-OBJ_DIR = obj
+SRCS_DIR = src
+OBJS_DIR = obj
 
-SRCS = $(addprefix $(SRC_DIR)/,\
-		 ft_atol.c ft_atoi.c ft_putstr_fd.c ft_gettime_ms.c)
-OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+SRCS = $(addprefix $(SRCS_DIR)/, \
+		 core_isalpha.c core_isdigit.c core_isspace.c \
+		 core_putendl_fd.c core_putstr_fd.c core_tolower.c \
+		 core_strtol.c exit_on_error.c \
+		 internal/core_strtol_utils.c)
+OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 all: $(NAME)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
+$(NAME): $(OBJS)
+	$(ARCHIVE) $(NAME) $(OBJS)
+
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJS)
-	@ar rcs $(NAME) $(OBJS)
-
-clean: 
-	@rm -rf $(OBJ_DIR)
+clean:
+	@rm -rf $(OBJS_DIR)
 
 fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all re fclean clean
+.PHONY: re fclean clean all

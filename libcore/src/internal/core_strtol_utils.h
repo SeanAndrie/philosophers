@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   core_strtol_utils.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 13:07:53 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/24 23:44:49 by sgadinga         ###   ########.fr       */
+/*   Created: 2025/07/24 22:30:05 by sgadinga          #+#    #+#             */
+/*   Updated: 2025/07/24 22:32:39 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <philo.h>
+#ifndef CORE_STRTOL_UTILS_H
+#define CORE_STRTOL_UTILS_H
 
-int main(int ac, char **av)
-{
-    if (ac >= 5 && ac <= 6)
-    {
-        core_putendl_fd("Valid Number of Arguments", STDOUT_FILENO);
-        printf("%d\n", is_valid_params(ac - 1, av + 1));
-    }
-    else
-        exit_on_error(NULL, "Invalid Number of Arguments", 1);
-    return (0);
-}
+int	convert_to_value(char c, int base);
+int	handle_base_prefix(const char **nptr, int base);
+void skip_whitespace_and_sign(const char **nptr, int *sign);
+long	check_overflow(long res, int digit, int base, int sign);
+
+#endif
