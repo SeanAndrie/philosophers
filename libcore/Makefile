@@ -6,7 +6,7 @@
 #    By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/24 22:34:49 by sgadinga          #+#    #+#              #
-#    Updated: 2025/07/24 23:14:57 by sgadinga         ###   ########.fr        #
+#    Updated: 2025/07/29 18:30:46 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,8 @@ OBJS_DIR = obj
 
 SRCS = $(addprefix $(SRCS_DIR)/, \
 		 core_isalpha.c core_isdigit.c core_isspace.c \
-		 core_putendl_fd.c core_putstr_fd.c core_tolower.c \
-		 core_strtol.c exit_on_error.c \
+		 core_putendl_fd.c core_putstr_fd.c core_putnbr_fd.c core_tolower.c \
+		 core_strtol.c get_current_time.c core_usleep.c fatal_error.c \
 		 internal/core_strtol_utils.c)
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 

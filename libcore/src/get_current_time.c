@@ -1,18 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   core_isalpha.c                                     :+:      :+:    :+:   */
+/*   get_current_time.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/24 16:41:51 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/28 16:06:55 by sgadinga         ###   ########.fr       */
+/*   Created: 2025/07/28 19:40:31 by sgadinga          #+#    #+#             */
+/*   Updated: 2025/07/28 20:46:48 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libcore.h>
 
-bool	core_isalpha(int c)
+time_t  get_current_time(void)
 {
-	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
+    int             err;
+    struct timeval  time;
+    
+    err = gettimeofday(&time, NULL);
+    if (err != 0)
+        fatal_error("gettimeofday", strerror(err), EXIT_FAILURE);
+    return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }

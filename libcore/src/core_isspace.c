@@ -6,13 +6,13 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 15:56:19 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/24 16:18:01 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/28 16:07:04 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libcore.h>
 
-int	core_isspace(int c)
+bool	core_isspace(int c)
 {
 	return ((c >= 9 && c <= 13) || c == 32);
 }

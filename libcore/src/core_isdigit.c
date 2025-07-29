@@ -6,13 +6,13 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 14:27:27 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/24 16:17:54 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/28 16:07:00 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libcore.h>
 
-int	core_isdigit(int c)
+bool	core_isdigit(int c)
 {
 	return (c >= '0' && c <= '9');
 }
