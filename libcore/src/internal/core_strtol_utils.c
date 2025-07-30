@@ -12,17 +12,17 @@
 
 #include <libcore.h>
 
-void skip_whitespace_and_sign(const char **nptr, int *sign)
+void	skip_whitespace_and_sign(const char **nptr, int *sign)
 {
 	*sign = 1;
-    while (core_isspace(**nptr))
-        (*nptr)++;
-    if (**nptr == '-' || **nptr == '+')
-    {
-        if (**nptr == '-')
+	while (core_isspace(**nptr))
+		(*nptr)++;
+	if (**nptr == '-' || **nptr == '+')
+	{
+		if (**nptr == '-')
 			*sign = -1;
-        (*nptr)++;
-    }
+		(*nptr)++;
+	}
 }
 
 int	handle_base_prefix(const char **nptr, int base)

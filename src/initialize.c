@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:42:24 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/29 19:51:33 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/30 10:27:58 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,13 @@ static int	initialize_philosophers(t_table *table)
 	{
 		table->philos[i] = &block[i];
 		table->philos[i]->id = i + 1;
+		table->philos[i]->thread = 0;
 		table->philos[i]->table = table;
-		table->philos[i]->left_fork = 0;
-		table->philos[i]->right_fork = 0;
 		table->philos[i]->meals_eaten = 0;
 		table->philos[i]->last_meal_ms = 0;
+		table->philos[i]->last_action_ms = 0;
+		table->philos[i]->left_fork = i;
+		table->philos[i]->right_fork = (i + 1) % count;
 	}
 	return (1);
 }
@@ -100,6 +102,8 @@ t_table	*set_table(int argc, char **argv)
 	memset(table, 0, sizeof(*table));
 	if (!parse_arguments(argc, argv, table))
 		return (free(table), NULL);
+	if (argc == 5)
+		table->max_meals = 0;
 	if (!initialize_mutexes(table))
 		return (free_table(table), NULL);
 	if (!initialize_philosophers(table))

@@ -5,19 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/28 19:39:39 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/29 20:41:52 by sgadinga         ###   ########.fr       */
+/*   Created: 2025/07/30 09:03:29 by sgadinga          #+#    #+#             */
+/*   Updated: 2025/07/30 09:03:35 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libcore.h>
 
-int core_usleep(size_t milliseconds)
+void	core_usleep(time_t milliseconds)
 {
-    size_t  start;
+	time_t	start;
 
-    start = get_current_time();
-    while ((get_current_time() - start) < milliseconds)
-        usleep(100);
-    return (0);
+	start = get_current_time();
+	while ((get_current_time() - start) < milliseconds)
+		usleep(500);
 }

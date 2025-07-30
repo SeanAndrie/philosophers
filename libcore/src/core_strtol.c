@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <libcore.h>
 #include "internal/core_strtol_utils.h"
+#include <libcore.h>
 
-static inline void set_endptr(char **endptr, const char *pos)
+static inline void	set_endptr(char **endptr, const char *pos)
 {
-    if (endptr)
-        *endptr = (char *)pos;
+	if (endptr)
+		*endptr = (char *)pos;
 }
 
 long	core_strtol(const char *nptr, char **endptr, int base)
@@ -29,7 +29,7 @@ long	core_strtol(const char *nptr, char **endptr, int base)
 	res = 0;
 	if (!nptr || !*nptr)
 		return (set_endptr(endptr, nptr), 0);
-    skip_whitespace_and_sign(&nptr, &sign);
+	skip_whitespace_and_sign(&nptr, &sign);
 	if (base != 0 && (base < 2 || base > 36))
 		return (set_endptr(endptr, nptr), errno = EINVAL, 0);
 	base = handle_base_prefix(&nptr, base);

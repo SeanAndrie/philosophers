@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 15:29:04 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/29 19:27:14 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/30 10:41:42 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,26 @@ void	print_philo_params(t_philo **philos, size_t n_philo)
 	}
 }
 
-void	log_status(t_philo *philo, char *action, char *ansi_color)
+void	log_status(t_philo *philo, const char *action, const char *ansi_color)
 {
-	time_t	time;
+	time_t	now;
+	time_t	elapsed;
+	time_t	since_last_action;
+	time_t	since_last_meal;
 
-	time = get_current_time() - philo->table->start_time;
-	mutex_gate(&philo->table->mutexes.log_lock, LOCK, "log");
+	now = get_current_time();
+	elapsed = now - philo->table->start_time;
+	since_last_action = now - philo->last_action_ms;
+	since_last_meal = now - philo->last_meal_ms;
+	mutex_gate(&philo->table->mutexes.log_lock, LOCK, "write");
 	if (ansi_color)
-		printf("%s%ld %u %s\033[0m\n", ansi_color, time, philo->id, action);
+		printf("%s%ld %u %s", ansi_color, elapsed, philo->id, action);
 	else
-		printf("%ld %u %s\n", time, philo->id, action);
-	mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "log");
+		printf("%ld %u %s", elapsed, philo->id, action);
+	if (DEBUG_MODE)
+		printf(" [+%ldms since last action, +%ldms since last meal]",
+			since_last_action, since_last_meal);
+	printf("\n");
+	mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "write");
+	philo->last_action_ms = now;
 }

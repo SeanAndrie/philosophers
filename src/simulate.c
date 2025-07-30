@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 14:43:43 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/29 20:41:27 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/30 10:24:04 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,17 @@ static void	wait_philosophers(t_table *table)
 		pthread_join(table->philos[i++]->thread, NULL);
 }
 
-void *philosopher_routine(void *arg)
+static void	*philosopher_routine(void *arg)
 {
-	t_philo	*philo = (t_philo *)arg;
+	t_philo	*philo;
 
-	if (philo->id % 2 == 0)
-		core_usleep(philo->table->time_to_eat_ms * 0.7);
+	philo = (t_philo *)arg;
+	if (philo->id % 2 == 1)
+		core_usleep(philo->table->time_to_eat_ms / 2);
 	while (simulation_active(philo->table))
 	{
-		philo_think(philo);
-		if (!simulation_active(philo->table))
-			break;
-		philo_eat(philo);
-		if (!simulation_active(philo->table))
-			break;
-		philo_sleep(philo);
+		if (!philo_think(philo) || !philo_eat(philo) || !philo_sleep(philo))
+			break ;
 	}
 	return (NULL);
 }
@@ -52,11 +48,14 @@ static void	*monitor_routine(void *arg)
 	t_table	*table;
 
 	table = (t_table *)arg;
-	core_usleep(table->time_to_eat_ms * 0.3);
 	while (true)
 	{
+		core_usleep(5);
 		if (!check_philosopher_state(table))
-			return (set_death_flag(table), NULL);
+		{
+			set_death_flag(table);
+			break ;
+		}
 	}
 	return (NULL);
 }

@@ -12,21 +12,22 @@
 
 #include <libcore.h>
 
-void    core_putnbr_fd(int n, int fd)
+void	core_putnbr_fd(int n, int fd)
 {
-    char c;
-    if (n == 0)
-    {
-        write(1, "0", 1);
-        return ;
-    }
-    if (n < 0)
-    {
-        write(fd, "-", 1);
-        n = -n;
-    }
-    if (n > 9)
-        core_putnbr_fd(n / 10, fd);
-    c = n % 10 + '0';
-    write(fd, &c, 1);   
+	char	c;
+
+	if (n == 0)
+	{
+		write(1, "0", 1);
+		return ;
+	}
+	if (n < 0)
+	{
+		write(fd, "-", 1);
+		n = -n;
+	}
+	if (n > 9)
+		core_putnbr_fd(n / 10, fd);
+	c = n % 10 + '0';
+	write(fd, &c, 1);
 }

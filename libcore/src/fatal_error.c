@@ -18,7 +18,7 @@ void	fatal_error(const char *context, const char *message, int exit_code)
 	if (context)
 	{
 		core_putstr_fd(context, STDERR_FILENO);
-		core_putstr_fd(": ", STDERR_FILENO);		
+		core_putstr_fd(": ", STDERR_FILENO);
 	}
 	core_putendl_fd(message, STDERR_FILENO);
 	if (exit_code >= 0)

@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:08:22 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/29 19:51:09 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/30 10:42:41 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@
 # include <libcore.h>
 # include <pthread.h>
 
-# define PHILO_USAGE "<n_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> [max_meals]"
+# define PHILO_USAGE "<n_philosophers> <time_to_die> <time_to_eat> \
+<time_to_sleep> [max_meals]"
 
 # define ANSI_RED "\033[31m"
 # define ANSI_GREEN "\033[32m"
+# define DEBUG_MODE false
 
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
@@ -62,6 +64,7 @@ typedef struct s_philo
 	int					right_fork;
 	unsigned int		meals_eaten;
 	time_t				last_meal_ms;
+	time_t				last_action_ms;
 }						t_philo;
 
 typedef struct s_table
@@ -81,18 +84,19 @@ typedef struct s_table
 int						parse_arguments(int argc, char **argv, t_table *table);
 
 // Philosopher Actions
-void					philo_think(t_philo *philo);
-void					philo_sleep(t_philo *philo);
-void					philo_eat(t_philo *philo);
+int						philo_think(t_philo *philo);
+int						philo_sleep(t_philo *philo);
+int						philo_eat(t_philo *philo);
 
 // Cleanup Functions
 void					free_table(t_table *table);
 void					free_forks(pthread_mutex_t *forks, size_t count);
 
 // Debugging Functions
-void					log_status(t_philo *philo, char *action, char *ansi_color);
 void					print_table_parameters(t_table *table);
 void					print_philo_params(t_philo **philos, size_t n_philo);
+void					log_status(t_philo *philo, const char *action,
+							const char *ansi_color);
 
 // Resource Initialization
 t_table					*set_table(int argc, char **argv);
@@ -104,14 +108,15 @@ int						initialize_mutex(pthread_mutex_t *mutex,
 							const char *context);
 int						create_thread(pthread_t *thread, void *routine(void *),
 							void *arg, const char *context);
-int						mutex_gate(pthread_mutex_t *mutex, t_lock_action action, char *context);
+int						mutex_gate(pthread_mutex_t *mutex, t_lock_action action,
+							char *context);
 
 // Simulation Functions
 int						start_simulation(t_table *table);
 
 // Simulation Utilities
+void					set_death_flag(t_table *table);
 bool					simulation_active(t_table *table);
 bool					check_philosopher_state(t_table *table);
-void					set_death_flag(t_table *table);
 
 #endif

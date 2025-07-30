@@ -6,67 +6,84 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 11:52:29 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/29 20:39:23 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/30 10:42:11 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
 
-void	philo_think(t_philo *philo)
+static int	pickup_forks(t_philo *philo)
 {
-	log_status(philo, "is thinking", NULL);
-	if (philo->id % 2 == 1)
-		core_usleep(philo->table->time_to_eat_ms * 0.5);
+	int		first;
+	int		second;
+	t_table	*table;
+
+	table = philo->table;
+	first = core_min(philo->left_fork, philo->right_fork);
+	second = core_max(philo->left_fork, philo->right_fork);
+	if (!mutex_gate(&table->mutexes.forks[first], LOCK, "fork"))
+		return (0);
+	if (!mutex_gate(&table->mutexes.forks[second], LOCK, "fork"))
+	{
+		mutex_gate(&table->mutexes.forks[first], UNLOCK, "fork");
+		return (0);
+	}
+	if (!simulation_active(table))
+	{
+		mutex_gate(&table->mutexes.forks[first], UNLOCK, "fork");
+		mutex_gate(&table->mutexes.forks[second], UNLOCK, "fork");
+		return (0);
+	}
+	log_status(philo, "has taken a fork", NULL);
+	log_status(philo, "has taken a fork", NULL);
+	return (1);
 }
 
-void	philo_sleep(t_philo *philo)
+static int	putdown_forks(t_philo *philo)
 {
+	t_table	*table;
+
+	table = philo->table;
+	if (!mutex_gate(&table->mutexes.forks[philo->right_fork], UNLOCK, "fork"))
+		return (0);
+	if (!mutex_gate(&table->mutexes.forks[philo->left_fork], UNLOCK, "fork"))
+		return (0);
+	return (1);
+}
+
+int	philo_think(t_philo *philo)
+{
+	if (!simulation_active(philo->table))
+		return (0);
+	log_status(philo, "is thinking", NULL);
+	return (1);
+}
+
+int	philo_sleep(t_philo *philo)
+{
+	if (!simulation_active(philo->table))
+		return (0);
 	log_status(philo, "is sleeping", NULL);
 	core_usleep(philo->table->time_to_sleep_ms);
+	return (1);
 }
 
-static void pickup_forks(t_philo *philo)
+int	philo_eat(t_philo *philo)
 {
-    t_table *table;
-    
-    table = philo->table;
-    if (philo->id % 2 == 0)
-    {
-        philo->left_fork = philo->id - 1;
-        philo->right_fork = philo->id % table->n_philo;
-    }
-    else
-    {
-        philo->left_fork = philo->id % table->n_philo;
-        philo->right_fork = philo->id - 1;
-    }
-    mutex_gate(&table->mutexes.forks[philo->left_fork], LOCK, "fork");
-    log_status(philo, "has taken a fork", NULL);
-    mutex_gate(&table->mutexes.forks[philo->right_fork], LOCK, "fork");
-    log_status(philo, "has taken a fork", NULL);
-}
+	t_table	*table;
 
-static void putdown_forks(t_philo *philo)
-{
-    t_table *table;
-
-    table = philo->table;
-    mutex_gate(&table->mutexes.forks[philo->right_fork], UNLOCK, "fork");
-    mutex_gate(&table->mutexes.forks[philo->left_fork], UNLOCK, "fork");
-}
-
-void philo_eat(t_philo *philo)
-{
-    t_table *table = philo->table;
-    
-    if (!simulation_active(table))
-        return ;
-    pickup_forks(philo);
-    mutex_gate(&table->mutexes.meal_lock, LOCK, "meal");
-    philo->last_meal_ms = get_current_time() - table->start_time;
-    philo->meals_eaten++;
-    mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
-    log_status(philo, "is eating", NULL);
-    core_usleep(table->time_to_eat_ms);
-    putdown_forks(philo);
+	table = philo->table;
+	if (!simulation_active(table))
+		return (0);
+	if (!pickup_forks(philo))
+		return (0);
+	mutex_gate(&table->mutexes.meal_lock, LOCK, "meal");
+	philo->last_meal_ms = get_current_time() - table->start_time;
+	philo->meals_eaten++;
+	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
+	log_status(philo, "is eating", NULL);
+	core_usleep(table->time_to_eat_ms);
+	if (!putdown_forks(philo))
+		return (0);
+	return (1);
 }
