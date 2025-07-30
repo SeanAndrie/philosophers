@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:55:25 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/30 08:59:12 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/31 00:35:58 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,19 @@ bool	simulation_active(t_table *table)
 	active = !table->death_flag;
 	mutex_gate(&table->mutexes.death_lock, UNLOCK, "death");
 	return (active);
+}
+
+bool	single_philo(t_philo *philo)
+{
+	t_table	*table;
+
+	table = philo->table;
+	if (table->n_philo != 1)
+		return (false);
+	if (!mutex_gate(&table->mutexes.forks[philo->left_fork], LOCK, "fork"))
+		return (true);
+	log_status(philo, "has taken a fork", NULL);
+	core_usleep(table->time_to_die_ms);
+	mutex_gate(&table->mutexes.forks[philo->right_fork], UNLOCK, "fork");
+	return (true);
 }

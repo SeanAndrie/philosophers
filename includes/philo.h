@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:08:22 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/30 10:42:41 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/31 00:20:31 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int						mutex_gate(pthread_mutex_t *mutex, t_lock_action action,
 int						start_simulation(t_table *table);
 
 // Simulation Utilities
+bool					single_philo(t_philo *philo);
 void					set_death_flag(t_table *table);
 bool					simulation_active(t_table *table);
 bool					check_philosopher_state(t_table *table);

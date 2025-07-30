@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 14:43:43 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/30 10:24:04 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/31 00:24:32 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ static void	*philosopher_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (philo->id % 2 == 1)
-		core_usleep(philo->table->time_to_eat_ms / 2);
 	while (simulation_active(philo->table))
 	{
 		if (!philo_think(philo) || !philo_eat(philo) || !philo_sleep(philo))

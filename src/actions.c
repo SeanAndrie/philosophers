@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 11:52:29 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/30 10:42:11 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/31 00:32:42 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ static int	pickup_forks(t_philo *philo)
 	t_table	*table;
 
 	table = philo->table;
+	if (single_philo(philo))
+		return (0);
 	first = core_min(philo->left_fork, philo->right_fork);
 	second = core_max(philo->left_fork, philo->right_fork);
 	if (!mutex_gate(&table->mutexes.forks[first], LOCK, "fork"))
@@ -77,10 +79,12 @@ int	philo_eat(t_philo *philo)
 		return (0);
 	if (!pickup_forks(philo))
 		return (0);
-	mutex_gate(&table->mutexes.meal_lock, LOCK, "meal");
+	if (!mutex_gate(&table->mutexes.meal_lock, LOCK, "meal"))
+		return (0);
 	philo->last_meal_ms = get_current_time() - table->start_time;
 	philo->meals_eaten++;
-	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
+	if (!mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal"))
+		return (0);
 	log_status(philo, "is eating", NULL);
 	core_usleep(table->time_to_eat_ms);
 	if (!putdown_forks(philo))
