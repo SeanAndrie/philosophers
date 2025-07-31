@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:08:22 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/31 00:20:31 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/31 14:18:54 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 # define PHILO_USAGE "<n_philosophers> <time_to_die> <time_to_eat> \
 <time_to_sleep> [max_meals]"
 
-# define ANSI_RED "\033[31m"
-# define ANSI_GREEN "\033[32m"
 # define DEBUG_MODE false
 
 typedef struct s_table	t_table;
@@ -95,8 +93,7 @@ void					free_forks(pthread_mutex_t *forks, size_t count);
 // Debugging Functions
 void					print_table_parameters(t_table *table);
 void					print_philo_params(t_philo **philos, size_t n_philo);
-void					log_status(t_philo *philo, const char *action,
-							const char *ansi_color);
+void					log_status(t_philo *philo, const char *action);
 
 // Resource Initialization
 t_table					*set_table(int argc, char **argv);

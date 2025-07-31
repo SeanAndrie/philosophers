@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 11:52:29 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/31 00:32:42 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/31 14:19:30 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ static int	pickup_forks(t_philo *philo)
 		mutex_gate(&table->mutexes.forks[second], UNLOCK, "fork");
 		return (0);
 	}
-	log_status(philo, "has taken a fork", NULL);
-	log_status(philo, "has taken a fork", NULL);
+	log_status(philo, "has taken a fork");
+	log_status(philo, "has taken a fork");
 	return (1);
 }
 
@@ -57,7 +57,7 @@ int	philo_think(t_philo *philo)
 {
 	if (!simulation_active(philo->table))
 		return (0);
-	log_status(philo, "is thinking", NULL);
+	log_status(philo, "is thinking");
 	return (1);
 }
 
@@ -65,7 +65,7 @@ int	philo_sleep(t_philo *philo)
 {
 	if (!simulation_active(philo->table))
 		return (0);
-	log_status(philo, "is sleeping", NULL);
+	log_status(philo, "is sleeping");
 	core_usleep(philo->table->time_to_sleep_ms);
 	return (1);
 }
@@ -85,7 +85,7 @@ int	philo_eat(t_philo *philo)
 	philo->meals_eaten++;
 	if (!mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal"))
 		return (0);
-	log_status(philo, "is eating", NULL);
+	log_status(philo, "is eating");
 	core_usleep(table->time_to_eat_ms);
 	if (!putdown_forks(philo))
 		return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulate_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:55:25 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/31 00:35:58 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/07/31 14:20:04 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static bool	check_philosopher(t_table *table, size_t index, bool *ate_enough)
 	{
 		mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
 		set_death_flag(table);
-		log_status(table->philos[index], "died", ANSI_RED);
+		log_status(table->philos[index], "died");
 		return (true);
 	}
 	if (table->max_meals
@@ -71,7 +71,7 @@ bool	single_philo(t_philo *philo)
 		return (false);
 	if (!mutex_gate(&table->mutexes.forks[philo->left_fork], LOCK, "fork"))
 		return (true);
-	log_status(philo, "has taken a fork", NULL);
+	log_status(philo, "has taken a fork");
 	core_usleep(table->time_to_die_ms);
 	mutex_gate(&table->mutexes.forks[philo->right_fork], UNLOCK, "fork");
 	return (true);
