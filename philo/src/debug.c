@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 15:29:04 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/31 14:18:29 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/07 15:23:26 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,11 @@ void	log_status(t_philo *philo, const char *action)
 	since_last_action = now - philo->last_action_ms;
 	since_last_meal = now - philo->last_meal_ms;
 	mutex_gate(&philo->table->mutexes.log_lock, LOCK, "write");
-	printf("%ld %u %s\n", elapsed, philo->id, action);
+	printf("%ld %u %s", elapsed, philo->id, action);
 	if (DEBUG_MODE)
-		printf(" [+%ldms since last action, +%ldms since last meal]\n",
+		printf(" [+%ldms since last action, +%ldms since last meal]",
 			since_last_action, since_last_meal);
+	printf("\n");
 	mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "write");
 	philo->last_action_ms = now;
 }
