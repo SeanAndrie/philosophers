@@ -3,30 +3,32 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
+#    By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/08/07 15:42:20 by sgadinga          #+#    #+#              #
-#    Updated: 2025/08/12 18:28:31 by sgadinga         ###   ########.fr        #
+#    Created: 2025/07/24 22:34:49 by sgadinga          #+#    #+#              #
+#    Updated: 2025/07/30 08:53:19 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo_bonus
+NAME = libcore.a
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -Iincludes -Ilibcore/includes
+CFLAGS = -Wall -Werror -Wextra -Iincludes
+ARCHIVE = ar rcs
 
 SRCS_DIR = src
 OBJS_DIR = obj
 
-SRCS = $(addprefix $(SRCS_DIR)/, main.c initialize.c parsing.c simulate.c simulate_utils.c actions.c cleanup.c)
+SRCS = $(addprefix $(SRCS_DIR)/, \
+		 core_isalpha.c core_isdigit.c core_isspace.c core_min.c core_max.c \
+		 core_putendl_fd.c core_putstr_fd.c core_putnbr_fd.c core_tolower.c \
+		 core_strtol.c core_usleep.c get_current_time.c fatal_error.c \
+		 internal/core_strtol_utils.c)
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
-all: $(NAME) libcore
+all: $(NAME)
 
-libcore:
-	@make -C libcore
-
-$(NAME): libcore $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -Llibcore -lcore
+$(NAME): $(OBJS)
+	$(ARCHIVE) $(NAME) $(OBJS)
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	@mkdir -p $(dir $@)
@@ -34,12 +36,10 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 
 clean:
 	@rm -rf $(OBJS_DIR)
-	@make -C libcore clean
 
 fclean: clean
 	@rm -f $(NAME)
-	@make -C libcore fclean
 
 re: fclean all
 
-.PHONY: re fclean clean libcore all
+.PHONY: re fclean clean all
