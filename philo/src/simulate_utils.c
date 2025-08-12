@@ -43,7 +43,7 @@ bool	philo_dead_or_philos_full(t_table *table)
 	ate_enough = true;
 	if (!simulation_active(table))
 		return (false);
-	while (i < (int)table->n_philo)
+	while (i < table->n_philo)
 	{
 		if (check_philosopher(table->philos[i], &ate_enough))
 			break ;
