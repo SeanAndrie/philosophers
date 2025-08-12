@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:07:53 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/29 18:28:05 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/07 17:40:14 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int argc, char **argv)
 
 	table = set_table(argc, argv);
 	if (!table)
-		fatal_error(NULL, "failed to initialize table.", EXIT_FAILURE);
+		return (1);
 	if (!start_simulation(table))
 	{
 		free_table(table);

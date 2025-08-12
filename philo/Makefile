@@ -6,27 +6,27 @@
 #    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/24 12:54:04 by sgadinga          #+#    #+#              #
-#    Updated: 2025/08/07 15:38:19 by sgadinga         ###   ########.fr        #
+#    Updated: 2025/08/07 17:45:25 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -Ilibcore/includes
+CFLAGS = -Wall -Werror -Wextra -Iincludes -Ilibcore/includes
 
 SRCS_DIR = src
 OBJS_DIR = obj
 
-SRCS = $(addprefix $(SRCS_DIR)/, \
-		 main.c initialize.c parsing.c actions.c simulate.c simulate_utils.c sync_ops.c debug.c cleanup.c)
+SRCS = $(addprefix $(SRCS_DIR)/, main.c initialize.c parsing.c \
+		 simulate.c simulate_utils.c actions.c sync_ops.c debug.c cleanup.c)
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
-all: libcore $(NAME)
+all: $(NAME) libcore
 
 libcore:
 	@make -C libcore
 
-$(NAME): $(OBJS) libcore
+$(NAME): libcore $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -Llibcore -lcore
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c

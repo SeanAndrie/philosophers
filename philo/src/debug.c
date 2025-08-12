@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 15:29:04 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/07 15:23:26 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/11 18:55:19 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,10 @@ void	print_philo_params(t_philo **philos, size_t n_philo)
 
 void	log_status(t_philo *philo, const char *action)
 {
-	time_t	now;
 	time_t	elapsed;
-	time_t	since_last_action;
-	time_t	since_last_meal;
 
-	now = get_current_time();
-	elapsed = now - philo->table->start_time;
-	since_last_action = now - philo->last_action_ms;
-	since_last_meal = now - philo->last_meal_ms;
+	elapsed = get_current_time() - philo->table->start_time;
 	mutex_gate(&philo->table->mutexes.log_lock, LOCK, "write");
-	printf("%ld %u %s", elapsed, philo->id, action);
-	if (DEBUG_MODE)
-		printf(" [+%ldms since last action, +%ldms since last meal]",
-			since_last_action, since_last_meal);
-	printf("\n");
+	printf("%ld %u %s\n", elapsed, philo->id, action);
 	mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "write");
-	philo->last_action_ms = now;
 }

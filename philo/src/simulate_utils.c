@@ -6,46 +6,48 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:55:25 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/01 16:21:27 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/12 22:18:29 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
 
-static bool	check_philosopher(t_table *table, size_t index, bool *ate_enough)
+static bool	check_philosopher(t_philo *philo, bool *ate_enough)
 {
-	time_t	current_time;
+	bool	died;
+	t_table	*table;
+	time_t	elapsed;
 
-	current_time = get_current_time() - table->start_time;
+	died = false;
+	table = philo->table;
+	elapsed = get_current_time() - table->start_time;
 	mutex_gate(&table->mutexes.meal_lock, LOCK, "meal");
-	if ((current_time
-			- table->philos[index]->last_meal_ms) > table->time_to_die_ms)
+	if ((elapsed - philo->last_meal_ms) > table->time_to_die_ms)
 	{
-		mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
 		set_death_flag(table);
-		log_status(table->philos[index], "died");
-		return (true);
+		log_status(philo, "died");
+		died = true;
 	}
-	if (table->max_meals
-		&& table->philos[index]->meals_eaten < table->max_meals)
+	if (table->max_meals && philo->meals_eaten < table->max_meals)
 		*ate_enough = false;
 	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
-	return (false);
+	return (died);
 }
 
-bool	check_philosopher_state(t_table *table)
+bool	philo_dead_or_philos_full(t_table *table)
 {
 	size_t	i;
 	bool	ate_enough;
 
-	i = -1;
+	i = 0;
 	ate_enough = true;
 	if (!simulation_active(table))
 		return (false);
-	while (++i < table->n_philo)
+	while (i < (int)table->n_philo)
 	{
-		if (check_philosopher(table, i, &ate_enough))
+		if (check_philosopher(table->philos[i], &ate_enough))
 			break ;
+		i++;
 	}
 	if (table->max_meals > 0 && ate_enough)
 		return (false);

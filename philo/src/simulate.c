@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 14:43:43 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/31 00:24:32 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/12 22:19:14 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,10 @@ void	set_death_flag(t_table *table)
 	mutex_gate(&table->mutexes.death_lock, UNLOCK, "death");
 }
 
-static void	wait_philosophers(t_table *table)
+static void	wait_philosophers(t_table *table, int n_philo)
 {
-	size_t	i;
-
-	i = 0;
-	while (i < table->n_philo)
-		pthread_join(table->philos[i++]->thread, NULL);
+	while (--n_philo >= 0)
+		pthread_join(table->philos[n_philo]->thread, NULL);
 }
 
 static void	*philosopher_routine(void *arg)
@@ -49,11 +46,8 @@ static void	*monitor_routine(void *arg)
 	while (true)
 	{
 		core_usleep(5);
-		if (!check_philosopher_state(table))
-		{
-			set_death_flag(table);
+		if (philo_dead_or_philos_full(table))
 			break ;
-		}
 	}
 	return (NULL);
 }
@@ -63,26 +57,26 @@ int	start_simulation(t_table *table)
 	size_t		i;
 	pthread_t	monitor;
 
-	i = -1;
+	i = 0;
 	table->start_time = get_current_time();
-	while (++i < table->n_philo)
+	while (i < table->n_philo)
 	{
 		if (!create_thread(&table->philos[i]->thread, philosopher_routine,
 				table->philos[i], "philosopher"))
 		{
 			set_death_flag(table);
-			while (i-- > 0)
-				pthread_join(table->philos[i]->thread, NULL);
+			wait_philosophers(table, i);
 			return (0);
 		}
+		i++;
 	}
 	if (!create_thread(&monitor, monitor_routine, table, "monitor"))
 	{
 		set_death_flag(table);
-		wait_philosophers(table);
+		wait_philosophers(table, table->n_philo);
 		return (0);
 	}
 	pthread_join(monitor, NULL);
-	wait_philosophers(table);
+	wait_philosophers(table, table->n_philo);
 	return (1);
 }

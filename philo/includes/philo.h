@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:08:22 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/31 14:18:54 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/11 18:55:29 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 
 # define PHILO_USAGE "<n_philosophers> <time_to_die> <time_to_eat> \
 <time_to_sleep> [max_meals]"
-
-# define DEBUG_MODE false
 
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
@@ -62,7 +60,6 @@ typedef struct s_philo
 	int					right_fork;
 	unsigned int		meals_eaten;
 	time_t				last_meal_ms;
-	time_t				last_action_ms;
 }						t_philo;
 
 typedef struct s_table
@@ -115,6 +112,6 @@ int						start_simulation(t_table *table);
 bool					single_philo(t_philo *philo);
 void					set_death_flag(t_table *table);
 bool					simulation_active(t_table *table);
-bool					check_philosopher_state(t_table *table);
+bool					philo_dead_or_philos_full(t_table *table);
 
 #endif
