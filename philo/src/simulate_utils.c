@@ -28,8 +28,8 @@ static bool	check_philosopher(t_philo *philo, bool *ate_enough)
 		log_status(philo, "died");
 		died = true;
 	}
-	if (table->max_meals && philo->meals_eaten < table->max_meals)
-		*ate_enough = false;
+	if (table->max_meals && philo->meals_eaten >= table->max_meals)
+		*ate_enough = true;
 	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
 	return (died);
 }
@@ -37,21 +37,25 @@ static bool	check_philosopher(t_philo *philo, bool *ate_enough)
 bool	philo_dead_or_philos_full(t_table *table)
 {
 	size_t	i;
+	size_t	full_count;
 	bool	ate_enough;
 
 	i = 0;
-	ate_enough = true;
+	full_count = 0;
 	if (!simulation_active(table))
-		return (false);
+		return (true);
 	while (i < table->n_philo)
 	{
+		ate_enough = false;
 		if (check_philosopher(table->philos[i], &ate_enough))
-			break ;
+			return (true);
+		if (ate_enough)
+			full_count++;
 		i++;
 	}
-	if (table->max_meals > 0 && ate_enough)
-		return (false);
-	return (true);
+	if (table->max_meals > 0 && full_count == table->n_philo)
+		return (set_death_flag(table), true);
+	return (false);
 }
 
 bool	simulation_active(t_table *table)
