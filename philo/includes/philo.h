@@ -68,6 +68,7 @@ typedef struct s_table
 	t_mutexes			mutexes;
 	t_philo				**philos;
 	unsigned int		max_meals;
+	unsigned int		full_count;
 	bool				death_flag;
 	time_t				start_time;
 	time_t				time_to_die_ms;
@@ -112,6 +113,7 @@ int						start_simulation(t_table *table);
 bool					single_philo(t_philo *philo);
 void					set_death_flag(t_table *table);
 bool					simulation_active(t_table *table);
-bool					philo_dead_or_philos_full(t_table *table);
+bool					philo_starved(t_table *table);
+bool					philos_are_full(t_table *table);
 
 #endif

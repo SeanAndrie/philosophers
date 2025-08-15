@@ -46,7 +46,7 @@ static void	*monitor_routine(void *arg)
 	while (true)
 	{
 		core_usleep(5);
-		if (philo_dead_or_philos_full(table))
+		if (philo_starved(table) || philos_are_full(table))
 			break ;
 	}
 	return (NULL);

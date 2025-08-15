@@ -107,5 +107,6 @@ t_table	*set_table(int argc, char **argv)
 	if (!initialize_philosophers(table))
 		return (free_table(table), NULL);
 	table->death_flag = false;
+	table->full_count = 0;
 	return (table);
 }

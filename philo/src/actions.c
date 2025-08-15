@@ -83,6 +83,8 @@ int	philo_eat(t_philo *philo)
 		return (0);
 	philo->last_meal_ms = get_current_time() - table->start_time;
 	philo->meals_eaten++;
+	if (table->max_meals && philo->meals_eaten >= table->max_meals)
+		table->full_count++;
 	if (!mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal"))
 		return (0);
 	log_status(philo, "is eating");

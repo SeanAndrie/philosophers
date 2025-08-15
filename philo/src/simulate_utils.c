@@ -12,7 +12,7 @@
 
 #include <philo.h>
 
-static bool	check_philosopher(t_philo *philo, bool *ate_enough)
+static bool	is_dead(t_philo *philo)
 {
 	bool	died;
 	t_table	*table;
@@ -28,32 +28,27 @@ static bool	check_philosopher(t_philo *philo, bool *ate_enough)
 		log_status(philo, "died");
 		died = true;
 	}
-	if (table->max_meals && philo->meals_eaten >= table->max_meals)
-		*ate_enough = true;
 	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
 	return (died);
 }
 
-bool	philo_dead_or_philos_full(t_table *table)
+bool	philo_starved(t_table *table)
 {
 	size_t	i;
-	size_t	full_count;
-	bool	ate_enough;
 
 	i = 0;
-	full_count = 0;
-	if (!simulation_active(table))
-		return (true);
 	while (i < table->n_philo)
 	{
-		ate_enough = false;
-		if (check_philosopher(table->philos[i], &ate_enough))
+		if (is_dead(table->philos[i]))
 			return (true);
-		if (ate_enough)
-			full_count++;
 		i++;
 	}
-	if (table->max_meals > 0 && full_count == table->n_philo)
+	return (false);
+}
+
+bool	philos_are_full(t_table *table)
+{
+	if (table->max_meals && table->full_count == table->n_philo)
 		return (set_death_flag(table), true);
 	return (false);
 }
