@@ -6,21 +6,11 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 13:23:51 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/12 22:28:44 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/15 14:23:53 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo_bonus.h>
-
-bool	philos_are_full(t_table *table)
-{
-	int	completed_meals;
-
-	sem_getvalue(table->semaphores.full_sem, &completed_meals);
-	if (table->max_meals && completed_meals == (int)table->n_philo)
-		return (true);
-	return (false);
-}
 
 bool	philo_starved(t_philo *philo)
 {
@@ -42,32 +32,27 @@ bool	philo_starved(t_philo *philo)
 	return (starved);
 }
 
-int	philo_think(t_philo *philo)
-{
-	if (!simulation_active(philo->table))
-		return (0);
-	log_status(philo, "is thinking");
-	return (1);
-}
-
-int	philo_sleep(t_philo *philo)
-{
-	if (!simulation_active(philo->table))
-		return (0);
-	log_status(philo, "is sleeping");
-	core_usleep(philo->table->time_to_sleep_ms);
-	return (1);
-}
-
-int	philo_eat(t_philo *philo)
+static bool	single_philo(t_philo *philo)
 {
 	t_table	*table;
 
 	table = philo->table;
-	if (!simulation_active(table))
-		return (0);
+	if (table->n_philo != 1)
+		return (false);
+	sem_wait(table->semaphores.forks);
+	log_status(philo, "has taken a fork");
+	sem_post(table->semaphores.forks);
+	core_usleep(table->time_to_die_ms);
+	return (true);
+}
+
+bool	philo_eat(t_philo *philo)
+{
+	t_table	*table;
+
+	table = philo->table;
 	if (single_philo(philo))
-		return (0);
+		return (false);
 	sem_wait(table->semaphores.queue_sem);
 	sem_wait(table->semaphores.forks);
 	log_status(philo, "has taken a fork");
@@ -84,5 +69,15 @@ int	philo_eat(t_philo *philo)
 	sem_post(table->semaphores.forks);
 	sem_post(table->semaphores.forks);
 	sem_post(table->semaphores.queue_sem);
-	return (1);
+	return (true);
+}
+
+void	log_status(t_philo *philo, const char *action)
+{
+	time_t	elapsed;
+
+	sem_wait(philo->table->semaphores.log_sem);
+	elapsed = get_current_time() - philo->table->start_time;
+	printf("%ld %u %s\n", elapsed, philo->id, action);
+	sem_post(philo->table->semaphores.log_sem);
 }

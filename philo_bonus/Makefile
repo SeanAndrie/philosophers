@@ -6,7 +6,7 @@
 #    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/07 15:42:20 by sgadinga          #+#    #+#              #
-#    Updated: 2025/08/12 18:28:31 by sgadinga         ###   ########.fr        #
+#    Updated: 2025/08/15 13:45:16 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,9 @@ CFLAGS = -Wall -Werror -Wextra -Iincludes -Ilibcore/includes
 SRCS_DIR = src
 OBJS_DIR = obj
 
-SRCS = $(addprefix $(SRCS_DIR)/, main.c initialize.c parsing.c simulate.c simulate_utils.c actions.c cleanup.c)
+SRCS = $(addprefix $(SRCS_DIR)/, \
+		 main.c initialize.c parsing.c \
+		 simulate.c simulate_utils.c actions.c cleanup.c)
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 all: $(NAME) libcore

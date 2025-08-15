@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:16:21 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/12 19:31:14 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/15 12:27:18 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ static int	initialize_philos_and_pids(t_table *table)
 		table->philos[i]->table = table;
 		table->philos[i]->meals_eaten = 0;
 		table->philos[i]->last_meal_ms = 0;
-		table->philos[i]->death_flag = false;
 		i++;
 	}
 	return (1);

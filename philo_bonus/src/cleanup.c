@@ -6,11 +6,17 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:00:21 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/12 19:51:26 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/15 13:41:28 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo_bonus.h>
+
+void	cleanup_on_exit(t_philo *philo, int exit_code)
+{
+	close_semaphores(&philo->table->semaphores);
+	exit(exit_code);
+}
 
 void	unlink_semaphores(void)
 {
@@ -30,28 +36,6 @@ void	close_semaphores(t_semaphores *sem)
 	sem_close(sem->full_sem);
 	sem_close(sem->death_sem);
 	sem_close(sem->queue_sem);
-}
-
-void	wait_philosophers(t_table *table)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < table->n_philo)
-	{
-		if (table->pids[i] != -1)
-			waitpid(table->pids[i], NULL, 0);
-		i++;
-	}
-}
-
-void	kill_processes(t_table *table, int n_proc)
-{
-	while (--n_proc >= 0)
-	{
-		if (table->pids[n_proc] != -1)
-			kill(table->pids[n_proc], SIGTERM);
-	}
 }
 
 void	free_table(t_table *table)
