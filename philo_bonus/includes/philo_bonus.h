@@ -24,7 +24,9 @@
 	"<n_philosophers> <time_to_die> <time_to_eat> \
 <time_to_sleep> [max_meals]"
 
-# define DEBUG_MODE false
+# define ANSI_RED "\e[0;31m"
+# define ANSI_GREEN "\e[0;32m"
+# define ANSI_RESET "\e[0m"
 
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
@@ -94,7 +96,7 @@ void					kill_processes(t_table *table, int n_proc);
 // Philosopher Actions
 bool					philo_eat(t_philo *philo);
 bool					philo_starved(t_philo *philo);
-void					log_status(t_philo *philo, const char *action);
+void					log_status(t_philo *philo, const char *action, const char *color);
 
 // Cleanup
 void					unlink_semaphores(void);

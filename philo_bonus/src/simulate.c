@@ -34,10 +34,10 @@ static void	philosopher_routine(t_philo *philo)
 		cleanup_on_exit(philo, EXIT_FAILURE);
 	while (true)
 	{
-		log_status(philo, "is thinking");
+		log_status(philo, "is thinking", NULL);
 		if (!philo_eat(philo))
 			break ;
-		log_status(philo, "is sleeping");
+		log_status(philo, "is sleeping", NULL);
 		core_usleep(table->time_to_sleep_ms);
 	}
 	if (pthread_join(philo->monitor, NULL) != 0)
@@ -102,6 +102,7 @@ int	start_simulation(t_table *table)
 			(void *)table) != 0)
 		return (0);
 	wait_philosophers(table);
-	pthread_join(table->watcher, NULL);
+	if (pthread_join(table->watcher, NULL) != 0)
+		return (0);
 	return (1);
 }

@@ -25,7 +25,7 @@ bool	philo_starved(t_philo *philo)
 	if ((elapsed - philo->last_meal_ms) > table->time_to_die_ms)
 	{
 		sem_post(table->semaphores.death_sem);
-		log_status(philo, "died");
+		log_status(philo, "died", ANSI_RED);
 		starved = true;
 	}
 	sem_post(table->semaphores.meal_sem);
@@ -40,7 +40,7 @@ static bool	single_philo(t_philo *philo)
 	if (table->n_philo != 1)
 		return (false);
 	sem_wait(table->semaphores.forks);
-	log_status(philo, "has taken a fork");
+	log_status(philo, "has taken a fork", NULL);
 	sem_post(table->semaphores.forks);
 	core_usleep(table->time_to_die_ms);
 	return (true);
@@ -55,16 +55,16 @@ bool	philo_eat(t_philo *philo)
 		return (false);
 	sem_wait(table->semaphores.queue_sem);
 	sem_wait(table->semaphores.forks);
-	log_status(philo, "has taken a fork");
+	log_status(philo, "has taken a fork", NULL);
 	sem_wait(table->semaphores.forks);
-	log_status(philo, "has taken a fork");
+	log_status(philo, "has taken a fork", NULL);
 	sem_wait(table->semaphores.meal_sem);
 	philo->last_meal_ms = get_current_time() - table->start_time;
 	philo->meals_eaten++;
 	if (table->max_meals && philo->meals_eaten == table->max_meals)
 		sem_post(table->semaphores.full_sem);
 	sem_post(table->semaphores.meal_sem);
-	log_status(philo, "is eating");
+	log_status(philo, "is eating", ANSI_GREEN);
 	core_usleep(table->time_to_eat_ms);
 	sem_post(table->semaphores.forks);
 	sem_post(table->semaphores.forks);
@@ -72,12 +72,15 @@ bool	philo_eat(t_philo *philo)
 	return (true);
 }
 
-void	log_status(t_philo *philo, const char *action)
+void	log_status(t_philo *philo, const char *action, const char *color)
 {
 	time_t	elapsed;
 
 	sem_wait(philo->table->semaphores.log_sem);
 	elapsed = get_current_time() - philo->table->start_time;
-	printf("%ld %u %s\n", elapsed, philo->id, action);
+	if (color)
+		printf("%s%ld %u %s%s\n", color, elapsed, philo->id, action, ANSI_RESET);
+	else
+		printf("%ld %u %s\n", elapsed, philo->id, action);
 	sem_post(philo->table->semaphores.log_sem);
 }
