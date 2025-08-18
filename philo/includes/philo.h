@@ -19,6 +19,10 @@
 # define PHILO_USAGE "<n_philosophers> <time_to_die> <time_to_eat> \
 <time_to_sleep> [max_meals]"
 
+# define ANSI_RED "\e[0;31m"
+# define ANSI_GREEN "\e[0;32m"
+# define ANSI_RESET "\e[0m"
+
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
 
@@ -91,7 +95,7 @@ void					free_forks(pthread_mutex_t *forks, size_t count);
 // Debugging Functions
 void					print_table_parameters(t_table *table);
 void					print_philo_params(t_philo **philos, size_t n_philo);
-void					log_status(t_philo *philo, const char *action);
+void					log_status(t_philo *philo, const char *action, const char *color);
 
 // Resource Initialization
 t_table					*set_table(int argc, char **argv);

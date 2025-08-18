@@ -25,7 +25,7 @@ static bool	is_dead(t_philo *philo)
 	if ((elapsed - philo->last_meal_ms) > table->time_to_die_ms)
 	{
 		set_death_flag(table);
-		log_status(philo, "died");
+		log_status(philo, "died", ANSI_RED);
 		died = true;
 	}
 	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
@@ -48,9 +48,16 @@ bool	philo_starved(t_table *table)
 
 bool	philos_are_full(t_table *table)
 {
+	bool	full;
+
+	full = false;
+	mutex_gate(&table->mutexes.meal_lock, LOCK, "meal");
 	if (table->max_meals && table->full_count == table->n_philo)
-		return (set_death_flag(table), true);
-	return (false);
+		full = true;
+	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
+	if (full)
+		set_death_flag(table);
+	return (full);
 }
 
 bool	simulation_active(t_table *table)
@@ -72,7 +79,7 @@ bool	single_philo(t_philo *philo)
 		return (false);
 	if (!mutex_gate(&table->mutexes.forks[philo->left_fork], LOCK, "fork"))
 		return (true);
-	log_status(philo, "has taken a fork");
+	log_status(philo, "has taken a fork", NULL);
 	core_usleep(table->time_to_die_ms);
 	mutex_gate(&table->mutexes.forks[philo->right_fork], UNLOCK, "fork");
 	return (true);

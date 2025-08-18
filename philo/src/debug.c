@@ -35,12 +35,15 @@ void	print_philo_params(t_philo **philos, size_t n_philo)
 	}
 }
 
-void	log_status(t_philo *philo, const char *action)
+void	log_status(t_philo *philo, const char *action, const char *color)
 {
 	time_t	elapsed;
 
 	elapsed = get_current_time() - philo->table->start_time;
 	mutex_gate(&philo->table->mutexes.log_lock, LOCK, "write");
-	printf("%ld %u %s\n", elapsed, philo->id, action);
+	if (color)
+		printf("%s%ld %u %s%s\n", color, elapsed, philo->id, action, ANSI_RESET);		
+	else
+		printf("%ld %u %s\n", elapsed, philo->id, action);
 	mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "write");
 }

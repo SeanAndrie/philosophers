@@ -28,10 +28,14 @@ static void	wait_philosophers(t_table *table, int n_philo)
 static void	*philosopher_routine(void *arg)
 {
 	t_philo	*philo;
+	t_table *table;
 
 	philo = (t_philo *)arg;
-	while (simulation_active(philo->table))
+	table = philo->table;
+	while (simulation_active(table))
 	{
+		if (table->max_meals && philo->meals_eaten == table->max_meals)
+			break ;
 		if (!philo_think(philo) || !philo_eat(philo) || !philo_sleep(philo))
 			break ;
 	}

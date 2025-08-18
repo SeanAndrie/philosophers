@@ -36,8 +36,8 @@ static int	pickup_forks(t_philo *philo)
 		mutex_gate(&table->mutexes.forks[second], UNLOCK, "fork");
 		return (0);
 	}
-	log_status(philo, "has taken a fork");
-	log_status(philo, "has taken a fork");
+	log_status(philo, "has taken a fork", NULL);
+	log_status(philo, "has taken a fork", NULL);
 	return (1);
 }
 
@@ -57,7 +57,7 @@ int	philo_think(t_philo *philo)
 {
 	if (!simulation_active(philo->table))
 		return (0);
-	log_status(philo, "is thinking");
+	log_status(philo, "is thinking", NULL);
 	return (1);
 }
 
@@ -65,7 +65,7 @@ int	philo_sleep(t_philo *philo)
 {
 	if (!simulation_active(philo->table))
 		return (0);
-	log_status(philo, "is sleeping");
+	log_status(philo, "is sleeping", NULL);
 	core_usleep(philo->table->time_to_sleep_ms);
 	return (1);
 }
@@ -83,11 +83,11 @@ int	philo_eat(t_philo *philo)
 		return (0);
 	philo->last_meal_ms = get_current_time() - table->start_time;
 	philo->meals_eaten++;
-	if (table->max_meals && philo->meals_eaten >= table->max_meals)
+	if (table->max_meals && philo->meals_eaten == table->max_meals)
 		table->full_count++;
 	if (!mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal"))
 		return (0);
-	log_status(philo, "is eating");
+	log_status(philo, "is eating", ANSI_GREEN);
 	core_usleep(table->time_to_eat_ms);
 	if (!putdown_forks(philo))
 		return (0);
