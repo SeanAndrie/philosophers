@@ -20,23 +20,19 @@ static int	initialize_semaphores(t_table *table)
 	sem = &table->semaphores;
 	sem->sem_initialized = false;
 	sem->log_sem = sem_open("/log_sem", O_CREAT, 0644, 1);
-	if (sem->log_sem == SEM_FAILED)
-		return (0);
 	sem->meal_sem = sem_open("/meal_sem", O_CREAT, 0644, 1);
-	if (sem->meal_sem == SEM_FAILED)
-		return (0);
 	sem->full_sem = sem_open("/full_sem", O_CREAT, 0644, 0);
-	if (sem->full_sem == SEM_FAILED)
-		return (0);
 	sem->death_sem = sem_open("/death_sem", O_CREAT, 0644, 0);
-	if (sem->death_sem == SEM_FAILED)
-		return (0);
 	sem->queue_sem = sem_open("/queue_sem", O_CREAT, 0644, table->n_philo - 1);
-	if (sem->queue_sem == SEM_FAILED)
-		return (0);
 	sem->forks = sem_open("/forks", O_CREAT, 0644, table->n_philo);
-	if (sem->forks == SEM_FAILED)
+	if (sem->log_sem == SEM_FAILED || sem->meal_sem == SEM_FAILED || 
+		sem->full_sem == SEM_FAILED || sem->death_sem == SEM_FAILED ||
+		sem->queue_sem == SEM_FAILED || sem->forks == SEM_FAILED)
+	{
+		close_semaphores(sem);
+		unlink_semaphores();
 		return (0);
+	}
 	sem->sem_initialized = true;
 	return (1);
 }

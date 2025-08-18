@@ -30,12 +30,18 @@ void	unlink_semaphores(void)
 
 void	close_semaphores(t_semaphores *sem)
 {
-	sem_close(sem->forks);
-	sem_close(sem->log_sem);
-	sem_close(sem->meal_sem);
-	sem_close(sem->full_sem);
-	sem_close(sem->death_sem);
-	sem_close(sem->queue_sem);
+	if (sem->forks != SEM_FAILED)
+		sem_close(sem->forks);
+	if (sem->log_sem != SEM_FAILED)
+		sem_close(sem->log_sem);
+	if (sem->meal_sem != SEM_FAILED)
+		sem_close(sem->meal_sem);
+	if (sem->full_sem != SEM_FAILED)
+		sem_close(sem->full_sem);
+	if (sem->death_sem != SEM_FAILED)
+		sem_close(sem->death_sem);
+	if (sem->queue_sem != SEM_FAILED)
+		sem_close(sem->queue_sem);
 }
 
 void	free_table(t_table *table)
