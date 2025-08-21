@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:08:22 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/21 17:12:42 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 17:32:49 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define ANSI_GREEN "\e[0;32m"
 # define ANSI_RESET "\e[0m"
 
-# define VERBOSE true
+# define VERBOSE false
 
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
