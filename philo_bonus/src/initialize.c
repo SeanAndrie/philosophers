@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initialize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 16:16:21 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/15 12:27:18 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:50:55 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@ static int	initialize_semaphores(t_table *table)
 	sem->meal_sem = sem_open("/meal_sem", O_CREAT, 0644, 1);
 	sem->full_sem = sem_open("/full_sem", O_CREAT, 0644, 0);
 	sem->death_sem = sem_open("/death_sem", O_CREAT, 0644, 0);
+	sem->death_log_sem = sem_open("/death_log_sem", O_CREAT, 0644, 1);
 	sem->queue_sem = sem_open("/queue_sem", O_CREAT, 0644, table->n_philo - 1);
 	sem->forks = sem_open("/forks", O_CREAT, 0644, table->n_philo);
-	if (sem->log_sem == SEM_FAILED || sem->meal_sem == SEM_FAILED || 
-		sem->full_sem == SEM_FAILED || sem->death_sem == SEM_FAILED ||
-		sem->queue_sem == SEM_FAILED || sem->forks == SEM_FAILED)
+	if (sem->log_sem == SEM_FAILED || sem->meal_sem == SEM_FAILED
+		|| sem->full_sem == SEM_FAILED || sem->death_sem == SEM_FAILED
+		|| sem->queue_sem == SEM_FAILED || sem->forks == SEM_FAILED
+		|| sem->death_log_sem == SEM_FAILED)
 	{
 		close_semaphores(sem);
 		unlink_semaphores();

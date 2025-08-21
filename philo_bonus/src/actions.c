@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 13:23:51 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/15 14:23:53 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:43:02 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ bool	philo_starved(t_philo *philo)
 	elapsed = get_current_time() - table->start_time;
 	if ((elapsed - philo->last_meal_ms) > table->time_to_die_ms)
 	{
+		sem_wait(table->semaphores.death_log_sem);
 		sem_post(table->semaphores.death_sem);
 		log_status(philo, "died", ANSI_RED);
 		starved = true;
@@ -79,7 +80,8 @@ void	log_status(t_philo *philo, const char *action, const char *color)
 	sem_wait(philo->table->semaphores.log_sem);
 	elapsed = get_current_time() - philo->table->start_time;
 	if (color)
-		printf("%s%ld %u %s%s\n", color, elapsed, philo->id, action, ANSI_RESET);
+		printf("%s%ld %u %s%s\n", color, elapsed, philo->id, action,
+			ANSI_RESET);
 	else
 		printf("%ld %u %s\n", elapsed, philo->id, action);
 	sem_post(philo->table->semaphores.log_sem);

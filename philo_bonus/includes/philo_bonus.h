@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:43:10 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/15 14:19:37 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:29:49 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_semaphores
 	sem_t				*full_sem;
 	sem_t				*death_sem;
 	sem_t				*queue_sem;
+	sem_t				*death_log_sem;
 	bool				sem_initialized;
 }						t_semaphores;
 
@@ -96,7 +97,8 @@ void					kill_processes(t_table *table, int n_proc);
 // Philosopher Actions
 bool					philo_eat(t_philo *philo);
 bool					philo_starved(t_philo *philo);
-void					log_status(t_philo *philo, const char *action, const char *color);
+void					log_status(t_philo *philo, const char *action,
+							const char *color);
 
 // Cleanup
 void					unlink_semaphores(void);

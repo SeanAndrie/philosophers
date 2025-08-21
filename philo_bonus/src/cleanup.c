@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 18:00:21 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/15 13:41:28 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:30:49 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	unlink_semaphores(void)
 	sem_unlink("/full_sem");
 	sem_unlink("/death_sem");
 	sem_unlink("/queue_sem");
+	sem_unlink("/death_log_sem");
 }
 
 void	close_semaphores(t_semaphores *sem)
@@ -42,6 +43,8 @@ void	close_semaphores(t_semaphores *sem)
 		sem_close(sem->death_sem);
 	if (sem->queue_sem != SEM_FAILED)
 		sem_close(sem->queue_sem);
+	if (sem->death_log_sem != SEM_FAILED)
+		sem_close(sem->death_log_sem);
 }
 
 void	free_table(t_table *table)
