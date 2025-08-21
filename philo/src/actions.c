@@ -6,51 +6,38 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 11:52:29 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/07/31 14:19:30 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 12:03:59 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
 
-static int	pickup_forks(t_philo *philo)
+bool	philo_starved(t_table *table)
 {
-	int		first;
-	int		second;
-	t_table	*table;
+	size_t	i;
 
-	table = philo->table;
-	if (single_philo(philo))
-		return (0);
-	first = core_min(philo->left_fork, philo->right_fork);
-	second = core_max(philo->left_fork, philo->right_fork);
-	if (!mutex_gate(&table->mutexes.forks[first], LOCK, "fork"))
-		return (0);
-	if (!mutex_gate(&table->mutexes.forks[second], LOCK, "fork"))
+	i = 0;
+	while (i < table->n_philo)
 	{
-		mutex_gate(&table->mutexes.forks[first], UNLOCK, "fork");
-		return (0);
+		if (is_dead(table->philos[i]))
+			return (true);
+		i++;
 	}
-	if (!simulation_active(table))
-	{
-		mutex_gate(&table->mutexes.forks[first], UNLOCK, "fork");
-		mutex_gate(&table->mutexes.forks[second], UNLOCK, "fork");
-		return (0);
-	}
-	log_status(philo, "has taken a fork", NULL);
-	log_status(philo, "has taken a fork", NULL);
-	return (1);
+	return (false);
 }
 
-static int	putdown_forks(t_philo *philo)
+bool	philos_are_full(t_table *table)
 {
-	t_table	*table;
+	bool	full;
 
-	table = philo->table;
-	if (!mutex_gate(&table->mutexes.forks[philo->right_fork], UNLOCK, "fork"))
-		return (0);
-	if (!mutex_gate(&table->mutexes.forks[philo->left_fork], UNLOCK, "fork"))
-		return (0);
-	return (1);
+	full = false;
+	mutex_gate(&table->mutexes.meal_lock, LOCK, "meal");
+	if (table->max_meals && table->full_count == table->n_philo)
+		full = true;
+	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
+	if (full)
+		set_death_flag(table);
+	return (full);
 }
 
 int	philo_think(t_philo *philo)

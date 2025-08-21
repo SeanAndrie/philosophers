@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:08:22 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/11 18:55:29 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 17:12:42 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@
 # include <libcore.h>
 # include <pthread.h>
 
-# define PHILO_USAGE "<n_philosophers> <time_to_die> <time_to_eat> \
+# define PHILO_USAGE \
+	"<n_philosophers> <time_to_die> <time_to_eat> \
 <time_to_sleep> [max_meals]"
 
 # define ANSI_RED "\e[0;31m"
 # define ANSI_GREEN "\e[0;32m"
 # define ANSI_RESET "\e[0m"
+
+# define VERBOSE true
 
 typedef struct s_table	t_table;
 typedef struct s_philo	t_philo;
@@ -46,9 +49,26 @@ typedef struct s_arg_desc
 	int					max_value;
 }						t_arg_desc;
 
+typedef enum e_fork_status
+{
+	FORK_ACQUIRED,
+	FORK_RELEASED
+}						t_fork_status;
+
+typedef struct s_fork
+{
+	pthread_mutex_t		mutex;
+	bool				is_taken;
+	unsigned int		owner_id;
+	unsigned long		times_used;
+	time_t				hold_time_ms;
+	time_t				hold_start_ms;
+	time_t				total_time_held_ms;
+}						t_fork;
+
 typedef struct s_mutexes
 {
-	pthread_mutex_t		*forks;
+	t_fork				*forks;
 	pthread_mutex_t		log_lock;
 	pthread_mutex_t		meal_lock;
 	pthread_mutex_t		death_lock;
@@ -83,24 +103,31 @@ typedef struct s_table
 // Parsing
 int						parse_arguments(int argc, char **argv, t_table *table);
 
-// Philosopher Actions
+// Actions
 int						philo_think(t_philo *philo);
 int						philo_sleep(t_philo *philo);
 int						philo_eat(t_philo *philo);
+bool					philo_starved(t_table *table);
+bool					philos_are_full(t_table *table);
 
-// Cleanup Functions
+// Fork Acquisition
+int						pickup_forks(t_philo *philo);
+int						putdown_forks(t_philo *philo);
+
+// Cleanup
 void					free_table(t_table *table);
-void					free_forks(pthread_mutex_t *forks, size_t count);
+void					free_forks(t_fork *forks, size_t count);
+void					wait_philosophers(t_table *table, int n_philo);
 
-// Debugging Functions
-void					print_table_parameters(t_table *table);
-void					print_philo_params(t_philo **philos, size_t n_philo);
-void					log_status(t_philo *philo, const char *action, const char *color);
+// Debugging
+void					print_fork_statistics(t_table *table);
+void					log_status(t_philo *philo, const char *action,
+							const char *color);
 
 // Resource Initialization
 t_table					*set_table(int argc, char **argv);
 
-// Synchronization Mech. Function Wrappers
+// Synchronization Mech. Wrappers
 int						destroy_mutex(pthread_mutex_t *mutex,
 							const char *context);
 int						initialize_mutex(pthread_mutex_t *mutex,
@@ -110,14 +137,13 @@ int						create_thread(pthread_t *thread, void *routine(void *),
 int						mutex_gate(pthread_mutex_t *mutex, t_lock_action action,
 							char *context);
 
-// Simulation Functions
+// Simulation
 int						start_simulation(t_table *table);
-
-// Simulation Utilities
-bool					single_philo(t_philo *philo);
 void					set_death_flag(t_table *table);
 bool					simulation_active(t_table *table);
-bool					philo_starved(t_table *table);
-bool					philos_are_full(t_table *table);
+
+// Simulation Utilities
+bool					is_dead(t_philo *philo);
+bool					single_philo(t_philo *philo);
 
 #endif

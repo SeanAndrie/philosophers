@@ -6,33 +6,48 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 15:29:04 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/11 18:55:19 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 17:18:37 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
 
-void	print_table_parameters(t_table *table)
+static inline void	header_and_columns(void)
 {
-	printf("\nNumber of Philosophers: %u\n", table->n_philo);
-	printf("Time to die (ms): %ld\n", table->time_to_die_ms);
-	printf("Time to eat (ms): %ld\n", table->time_to_eat_ms);
-	printf("Time to sleep (ms): %ld\n", table->time_to_sleep_ms);
-	printf("Number of Meals: %u\n\n", table->max_meals);
+	printf("\n===================");
+	printf(" FINAL FORK STATISTICS ");
+	printf("====================\n");
+	printf("| fork_id | times_used ");
+	printf("| total_time_held | average_time_held |\n");
+	printf("|---------|------------|--------");
+	printf("---------|-------------------|\n");
 }
 
-void	print_philo_params(t_philo **philos, size_t n_philo)
+void	print_fork_statistics(t_table *table)
 {
 	size_t	i;
+	t_fork	*forks;
+	time_t	average_time_held;
 
+	header_and_columns();
+	forks = table->mutexes.forks;
 	i = 0;
-	while (i < n_philo)
+	while (i < table->n_philo)
 	{
-		printf("philo id: %u\n", philos[i]->id);
-		printf("\tmeals_eaten: %u\n", philos[i]->meals_eaten);
-		printf("\tlast_meal_ms: %ld\n\n", philos[i]->last_meal_ms);
+		if (forks[i].times_used > 0)
+			average_time_held = forks[i].total_time_held_ms
+				/ forks[i].times_used;
+		else
+			average_time_held = 0;
+		printf("|%5zu    ", i);
+		printf("|%6lu      ", forks[i].times_used);
+		printf("|%9lums      ", forks[i].total_time_held_ms);
+		printf("|%10lums       ", average_time_held);
+		printf("|\n");
 		i++;
 	}
+	printf("==================================");
+	printf("============================\n\n");
 }
 
 void	log_status(t_philo *philo, const char *action, const char *color)
@@ -42,7 +57,8 @@ void	log_status(t_philo *philo, const char *action, const char *color)
 	elapsed = get_current_time() - philo->table->start_time;
 	mutex_gate(&philo->table->mutexes.log_lock, LOCK, "write");
 	if (color)
-		printf("%s%ld %u %s%s\n", color, elapsed, philo->id, action, ANSI_RESET);		
+		printf("%s%ld %u %s%s\n", color, elapsed, philo->id, action,
+			ANSI_RESET);
 	else
 		printf("%ld %u %s\n", elapsed, philo->id, action);
 	mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "write");

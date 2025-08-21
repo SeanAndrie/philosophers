@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:42:24 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/11 20:59:17 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 12:54:23 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,24 @@ static int	initialize_forks(t_table *table)
 {
 	size_t	i;
 
-	table->mutexes.forks = malloc(sizeof(pthread_mutex_t) * table->n_philo);
+	table->mutexes.forks = malloc(sizeof(t_fork) * table->n_philo);
 	if (!table->mutexes.forks)
 		return (fatal_error("table init", "forks: malloc failed", EXIT_NONE),
 			0);
 	i = 0;
 	while (i < table->n_philo)
 	{
-		if (!initialize_mutex(&table->mutexes.forks[i], "fork"))
+		if (!initialize_mutex(&table->mutexes.forks[i].mutex, "fork"))
 		{
 			free_forks(table->mutexes.forks, i);
 			table->mutexes.forks = NULL;
 			return (0);
 		}
+		table->mutexes.forks[i].owner_id = 0;
+		table->mutexes.forks[i].times_used = 0;
+		table->mutexes.forks[i].hold_time_ms = 0;
+		table->mutexes.forks[i].hold_start_ms = 0;
+		table->mutexes.forks[i].is_taken = false;
 		i++;
 	}
 	return (1);

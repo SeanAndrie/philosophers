@@ -6,7 +6,7 @@
 #    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/24 12:54:04 by sgadinga          #+#    #+#              #
-#    Updated: 2025/08/07 17:45:25 by sgadinga         ###   ########.fr        #
+#    Updated: 2025/08/21 01:58:53 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ SRCS_DIR = src
 OBJS_DIR = obj
 
 SRCS = $(addprefix $(SRCS_DIR)/, main.c initialize.c parsing.c \
-		 simulate.c simulate_utils.c actions.c sync_ops.c debug.c cleanup.c)
+		 simulate.c simulate_utils.c actions.c sync_ops.c debug.c \
+		 acquire_forks.c cleanup.c)
 OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 all: $(NAME) libcore

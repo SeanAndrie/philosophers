@@ -6,13 +6,13 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:55:25 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/12 22:18:29 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/21 01:52:23 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
 
-static bool	is_dead(t_philo *philo)
+bool	is_dead(t_philo *philo)
 {
 	bool	died;
 	t_table	*table;
@@ -32,44 +32,6 @@ static bool	is_dead(t_philo *philo)
 	return (died);
 }
 
-bool	philo_starved(t_table *table)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < table->n_philo)
-	{
-		if (is_dead(table->philos[i]))
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-bool	philos_are_full(t_table *table)
-{
-	bool	full;
-
-	full = false;
-	mutex_gate(&table->mutexes.meal_lock, LOCK, "meal");
-	if (table->max_meals && table->full_count == table->n_philo)
-		full = true;
-	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
-	if (full)
-		set_death_flag(table);
-	return (full);
-}
-
-bool	simulation_active(t_table *table)
-{
-	bool	active;
-
-	mutex_gate(&table->mutexes.death_lock, LOCK, "death");
-	active = !table->death_flag;
-	mutex_gate(&table->mutexes.death_lock, UNLOCK, "death");
-	return (active);
-}
-
 bool	single_philo(t_philo *philo)
 {
 	t_table	*table;
@@ -77,10 +39,11 @@ bool	single_philo(t_philo *philo)
 	table = philo->table;
 	if (table->n_philo != 1)
 		return (false);
-	if (!mutex_gate(&table->mutexes.forks[philo->left_fork], LOCK, "fork"))
+	if (!mutex_gate(&table->mutexes.forks[philo->left_fork].mutex, LOCK,
+			"fork"))
 		return (true);
 	log_status(philo, "has taken a fork", NULL);
 	core_usleep(table->time_to_die_ms);
-	mutex_gate(&table->mutexes.forks[philo->right_fork], UNLOCK, "fork");
+	mutex_gate(&table->mutexes.forks[philo->left_fork].mutex, UNLOCK, "fork");
 	return (true);
 }
