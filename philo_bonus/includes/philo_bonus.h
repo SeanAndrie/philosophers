@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 15:43:10 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/21 18:29:49 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/22 15:51:31 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct s_philo
 typedef struct s_table
 {
 	pid_t				*pids;
-	pthread_t			watcher;
+	pthread_t			monitor;
 	unsigned int		n_philo;
 	t_philo				**philos;
 	unsigned int		max_meals;

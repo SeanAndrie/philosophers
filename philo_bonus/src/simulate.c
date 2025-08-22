@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 13:20:43 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/21 19:19:48 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/22 15:51:54 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ static void	philosopher_routine(t_philo *philo)
 		cleanup_on_exit(philo, EXIT_FAILURE);
 	while (true)
 	{
-		log_status(philo, "is thinking", NULL);
 		if (!philo_eat(philo))
 			break ;
+		log_status(philo, "is thinking", NULL);
 		log_status(philo, "is sleeping", NULL);
 		core_usleep(table->time_to_sleep_ms);
 	}
@@ -61,7 +61,7 @@ static void	*meal_watcher(void *arg)
 	return (NULL);
 }
 
-static void	*watcher_routine(void *arg)
+static void	*monitor_routine(void *arg)
 {
 	t_table		*table;
 	pthread_t	meals_thread;
@@ -98,11 +98,11 @@ int	start_simulation(t_table *table)
 		}
 		i++;
 	}
-	if (pthread_create(&table->watcher, NULL, watcher_routine,
+	if (pthread_create(&table->monitor, NULL, monitor_routine,
 			(void *)table) != 0)
 		return (0);
 	wait_philosophers(table);
-	if (pthread_join(table->watcher, NULL) != 0)
+	if (pthread_join(table->monitor, NULL) != 0)
 		return (0);
 	return (1);
 }
