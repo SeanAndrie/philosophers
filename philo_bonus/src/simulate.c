@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/08 13:20:43 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/22 15:51:54 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:52:04 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ static void	philosopher_routine(t_philo *philo)
 		cleanup_on_exit(philo, EXIT_FAILURE);
 	while (true)
 	{
+		log_status(philo, "is thinking", NULL);
 		if (!philo_eat(philo))
 			break ;
-		log_status(philo, "is thinking", NULL);
 		log_status(philo, "is sleeping", NULL);
 		core_usleep(table->time_to_sleep_ms);
 	}

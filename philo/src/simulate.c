@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   simulate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 14:43:43 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/22 15:07:31 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:57:42 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	*philosopher_routine(void *arg)
 	{
 		if (table->max_meals && philo->meals_eaten == table->max_meals)
 			break ;
-		if (!philo_eat(philo) || !philo_think(philo) || !philo_sleep(philo))
+		if (!philo_think(philo) || !philo_eat(philo) || !philo_sleep(philo))
 			break ;
 	}
 	return (NULL);
@@ -53,7 +53,6 @@ static void	*monitor_routine(void *arg)
 	table = (t_table *)arg;
 	while (true)
 	{
-		core_usleep(5);
 		if (philos_are_full(table))
 			break ;
 		if (philo_starved(table))
