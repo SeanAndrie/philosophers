@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   acquire_forks.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 01:52:05 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/21 15:59:41 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:57:09 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,7 @@ static int	pickup_fork(t_philo *philo, t_fork *fork, int fork_index)
 	elapsed = get_current_time() - philo->table->start_time;
 	if (!mutex_gate(&fork->mutex, LOCK, "fork"))
 		return (0);
-	if (!simulation_active(philo->table))
-		return (mutex_gate(&fork->mutex, UNLOCK, "fork"), 0);
-	if (fork->is_taken)
+	if (!simulation_active(philo->table) || fork->is_taken)
 	{
 		mutex_gate(&fork->mutex, UNLOCK, "fork");
 		return (0);
