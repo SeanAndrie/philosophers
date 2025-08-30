@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 15:29:04 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/25 22:59:26 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/30 08:58:57 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	log_status(t_philo *philo, const char *action, const char *color)
 
 	elapsed = get_current_time() - philo->table->start_time;
 	mutex_gate(&philo->table->mutexes.log_lock, LOCK, "write");
-	if (!simulation_active(philo->table))
+	if (!simulation_active(philo->table) && core_strncmp(action, "died", 4) != 0)
 	{
 		mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "write");
 		return ;

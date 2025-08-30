@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 16:55:25 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/25 22:59:46 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/08/30 08:48:50 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ bool	is_dead(t_philo *philo)
 	mutex_gate(&table->mutexes.meal_lock, LOCK, "meal");
 	if ((elapsed - philo->last_meal_ms) > table->time_to_die_ms)
 	{
-		log_status(philo, "died", ANSI_RED);
 		set_death_flag(table);
+		log_status(philo, "died", ANSI_RED);
 		died = true;
 	}
 	mutex_gate(&table->mutexes.meal_lock, UNLOCK, "meal");
