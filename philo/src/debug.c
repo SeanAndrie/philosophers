@@ -56,7 +56,8 @@ void	log_status(t_philo *philo, const char *action, const char *color)
 
 	elapsed = get_current_time() - philo->table->start_time;
 	mutex_gate(&philo->table->mutexes.log_lock, LOCK, "write");
-	if (!simulation_active(philo->table) && core_strncmp(action, "died", 4) != 0)
+	if (!simulation_active(philo->table) && core_strncmp(action, "died",
+			4) != 0)
 	{
 		mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "write");
 		return ;

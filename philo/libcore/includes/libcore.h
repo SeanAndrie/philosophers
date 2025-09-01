@@ -34,7 +34,7 @@ bool	core_isalpha(int c);
 int		core_tolower(int c);
 int		core_min(int a, int b);
 int		core_max(int a, int b);
-int     core_strncmp(const char *s1, const char *s2, size_t n);
+int		core_strncmp(const char *s1, const char *s2, size_t n);
 
 long	core_strtol(const char *nptr, char **endptr, int base);
 
