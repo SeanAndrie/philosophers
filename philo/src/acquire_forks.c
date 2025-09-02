@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   acquire_forks.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 01:52:05 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/25 22:57:09 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/09/02 16:44:19 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,18 @@ int	pickup_forks(t_philo *philo)
 		return (0);
 	first = core_min(philo->left_fork, philo->right_fork);
 	second = core_max(philo->left_fork, philo->right_fork);
+	mutex_gate(&table->mutexes.queue_lock, LOCK, "queue");
 	if (!pickup_fork(philo, &table->mutexes.forks[first], first))
+	{
+		mutex_gate(&table->mutexes.queue_lock, UNLOCK, "queue");
 		return (0);
+	}
 	if (!pickup_fork(philo, &table->mutexes.forks[second], second))
 	{
 		putdown_fork(philo, &table->mutexes.forks[first], first);
+		mutex_gate(&table->mutexes.queue_lock, UNLOCK, "queue");
 		return (0);
 	}
+	mutex_gate(&table->mutexes.queue_lock, UNLOCK, "queue");
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:08:22 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/22 15:57:20 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/09/02 16:48:25 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_mutexes
 	pthread_mutex_t		log_lock;
 	pthread_mutex_t		meal_lock;
 	pthread_mutex_t		death_lock;
+	pthread_mutex_t		queue_lock;
 	bool				locks_initialized;
 }						t_mutexes;
 
@@ -116,6 +117,7 @@ int						putdown_forks(t_philo *philo);
 
 // Cleanup
 void					free_table(t_table *table);
+void					free_mutexes(t_mutexes mutexes, int n_philo);
 void					free_forks(t_fork *forks, size_t count);
 void					wait_philosophers(t_table *table, int n_philo);
 
