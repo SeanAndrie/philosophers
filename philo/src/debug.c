@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgadinga <sgadinga@student.42.abudhabi.ae> +#+  +:+       +#+        */
+/*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 15:29:04 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/08/30 08:58:57 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:58:36 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,27 @@ void	log_status(t_philo *philo, const char *action, const char *color)
 	else
 		printf("%ld %u %s\n", elapsed, philo->id, action);
 	mutex_gate(&philo->table->mutexes.log_lock, UNLOCK, "write");
+}
+
+void	log_fork_status(t_philo *philo, t_fork *fork, int fork_index,
+		t_fork_status status)
+{
+	t_table	*table;
+	time_t	elapsed;
+	time_t	hold_time;
+
+	table = philo->table;
+	elapsed = get_current_time() - table->start_time;
+	mutex_gate(&table->mutexes.log_lock, LOCK, "fork_log");
+	printf("%ld %u", elapsed, philo->id);
+	if (status == FORK_ACQUIRED)
+		printf(" acquired fork %d (used #: %lu)\n", fork_index,
+			fork->times_used);
+	else if (status == FORK_RELEASED)
+	{
+		hold_time = elapsed - fork->hold_start_ms;
+		printf(" released fork %d (held for %ldms | total: %ldms)\n",
+			fork_index, hold_time, fork->total_time_held_ms);
+	}
+	mutex_gate(&table->mutexes.log_lock, UNLOCK, "fork_log");
 }

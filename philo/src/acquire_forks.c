@@ -6,34 +6,11 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 01:52:05 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/09/02 16:44:19 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:35:02 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <philo.h>
-
-static void	log_fork_status(t_philo *philo, t_fork *fork, int fork_index,
-		t_fork_status status)
-{
-	t_table	*table;
-	time_t	elapsed;
-	time_t	hold_time;
-
-	table = philo->table;
-	elapsed = get_current_time() - table->start_time;
-	mutex_gate(&table->mutexes.log_lock, LOCK, "fork_log");
-	printf("%ld %u", elapsed, philo->id);
-	if (status == FORK_ACQUIRED)
-		printf(" acquired fork %d (used #: %lu)\n", fork_index,
-			fork->times_used);
-	else if (status == FORK_RELEASED)
-	{
-		hold_time = elapsed - fork->hold_start_ms;
-		printf(" released fork %d (held for %ldms | total: %ldms)\n",
-			fork_index, hold_time, fork->total_time_held_ms);
-	}
-	mutex_gate(&table->mutexes.log_lock, UNLOCK, "fork_log");
-}
 
 static int	putdown_fork(t_philo *philo, t_fork *fork, int fork_index)
 {
@@ -61,6 +38,13 @@ static int	pickup_fork(t_philo *philo, t_fork *fork, int fork_index)
 	elapsed = get_current_time() - philo->table->start_time;
 	if (!mutex_gate(&fork->mutex, LOCK, "fork"))
 		return (0);
+	if (fork->owner_id != -1
+		&& fork->total_time_held_ms > (philo->table->time_to_eat_ms / 2)
+		&& fork->is_taken)
+	{
+		mutex_gate(&fork->mutex, UNLOCK, "fork");
+		return (usleep(philo->table->time_to_eat_ms * 1000 / 10), 0);
+	}
 	if (!simulation_active(philo->table) || fork->is_taken)
 	{
 		mutex_gate(&fork->mutex, UNLOCK, "fork");
@@ -71,9 +55,8 @@ static int	pickup_fork(t_philo *philo, t_fork *fork, int fork_index)
 	fork->hold_start_ms = elapsed;
 	fork->owner_id = philo->id;
 	if (VERBOSE)
-		log_fork_status(philo, fork, fork_index, FORK_ACQUIRED);
-	else
-		log_status(philo, "has taken a fork", NULL);
+		return (log_fork_status(philo, fork, fork_index, FORK_ACQUIRED), 1);
+	log_status(philo, "has taken a fork", NULL);
 	return (1);
 }
 
@@ -102,18 +85,12 @@ int	pickup_forks(t_philo *philo)
 		return (0);
 	first = core_min(philo->left_fork, philo->right_fork);
 	second = core_max(philo->left_fork, philo->right_fork);
-	mutex_gate(&table->mutexes.queue_lock, LOCK, "queue");
 	if (!pickup_fork(philo, &table->mutexes.forks[first], first))
-	{
-		mutex_gate(&table->mutexes.queue_lock, UNLOCK, "queue");
 		return (0);
-	}
 	if (!pickup_fork(philo, &table->mutexes.forks[second], second))
 	{
 		putdown_fork(philo, &table->mutexes.forks[first], first);
-		mutex_gate(&table->mutexes.queue_lock, UNLOCK, "queue");
 		return (0);
 	}
-	mutex_gate(&table->mutexes.queue_lock, UNLOCK, "queue");
 	return (1);
 }

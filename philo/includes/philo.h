@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:08:22 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/09/02 16:48:25 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:16:50 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct s_fork
 {
 	pthread_mutex_t		mutex;
 	bool				is_taken;
-	unsigned int		owner_id;
+	int					owner_id;
 	unsigned long		times_used;
 	time_t				hold_time_ms;
 	time_t				hold_start_ms;
@@ -72,7 +72,6 @@ typedef struct s_mutexes
 	pthread_mutex_t		log_lock;
 	pthread_mutex_t		meal_lock;
 	pthread_mutex_t		death_lock;
-	pthread_mutex_t		queue_lock;
 	bool				locks_initialized;
 }						t_mutexes;
 
@@ -125,6 +124,8 @@ void					wait_philosophers(t_table *table, int n_philo);
 void					print_fork_statistics(t_table *table);
 void					log_status(t_philo *philo, const char *action,
 							const char *color);
+void					log_fork_status(t_philo *philo, t_fork *fork,
+							int fork_index, t_fork_status status);
 
 // Resource Initialization
 t_table					*set_table(int argc, char **argv);

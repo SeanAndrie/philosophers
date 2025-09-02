@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 22:34:38 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/09/02 16:34:37 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:09:01 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	free_mutexes(t_mutexes mutexes, int n_philo)
 	destroy_mutex(&mutexes.log_lock, "log");
 	destroy_mutex(&mutexes.meal_lock, "meal");
 	destroy_mutex(&mutexes.death_lock, "death");
-	destroy_mutex(&mutexes.queue_lock, "queue");
 }
 
 void	free_table(t_table *table)

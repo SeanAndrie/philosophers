@@ -6,7 +6,7 @@
 /*   By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 13:42:24 by sgadinga          #+#    #+#             */
-/*   Updated: 2025/09/02 16:48:43 by sgadinga         ###   ########.fr       */
+/*   Updated: 2025/09/02 18:26:38 by sgadinga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	initialize_forks(t_table *table)
 			table->mutexes.forks = NULL;
 			return (0);
 		}
-		table->mutexes.forks[i].owner_id = 0;
+		table->mutexes.forks[i].owner_id = -1;
 		table->mutexes.forks[i].times_used = 0;
 		table->mutexes.forks[i].hold_time_ms = 0;
 		table->mutexes.forks[i].hold_start_ms = 0;
@@ -55,15 +55,12 @@ static int	initialize_mutexes(t_table *table)
 		destroy_mutex(&table->mutexes.meal_lock, "meal");
 		return (0);
 	}
-	if (!initialize_mutex(&table->mutexes.queue_lock, "queue"))
-	{
-		destroy_mutex(&table->mutexes.log_lock, "log");
-		destroy_mutex(&table->mutexes.meal_lock, "meal");
-		destroy_mutex(&table->mutexes.death_lock, "death");
-	}
 	table->mutexes.locks_initialized = true;
 	if (!initialize_forks(table))
-		return (free_mutexes(table->mutexes, table->n_philo), 0);
+	{
+		free_mutexes(table->mutexes, table->n_philo);
+		return (0);
+	}
 	return (1);
 }
 
