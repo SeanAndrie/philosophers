@@ -6,7 +6,7 @@
 #    By: sgadinga <sgadinga@student.42abudhabi.ae>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/24 12:54:04 by sgadinga          #+#    #+#              #
-#    Updated: 2025/08/21 01:58:53 by sgadinga         ###   ########.fr        #
+#    Updated: 2025/09/05 17:07:17 by sgadinga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,10 +24,10 @@ OBJS = $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 all: $(NAME) libcore
 
-libcore:
+libcore/libcore.a:
 	@make -C libcore
 
-$(NAME): libcore $(OBJS)
+$(NAME): libcore/libcore.a $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -Llibcore -lcore
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
